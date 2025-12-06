@@ -26,4 +26,6 @@ COPY . .
 
 # Define el comando de inicio para Gunicorn (servidor de producción)
 # 'app' es el módulo (app.py), y ':app' es el objeto Flask dentro del módulo
-CMD gunicorn --bind 0.0.0.0:$PORT app:app
+# LÍNEA ANTIGUA (que dio error)
+# LÍNEA CORREGIDA (Ejecuta gunicorn como un módulo de Python)
+CMD python -m gunicorn --bind 0.0.0.0:$PORT app:app
