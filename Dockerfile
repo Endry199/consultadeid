@@ -15,7 +15,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # 2. Copia los requisitos e instálalos en la ruta principal del sistema Python
-#    ESTO SOLUCIONA EL ERROR 'No module named gunicorn'
+#    Esta secuencia asegura que los ejecutables estén en /usr/local/bin
 COPY requirements.txt /tmp/requirements.txt
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
@@ -25,6 +25,6 @@ WORKDIR /usr/src/app
 # 4. Copia el resto del código (tu app.py) al directorio de trabajo
 COPY . .
 
-# 5. Comando de inicio (Ejecuta gunicorn como un módulo de Python)
-#    Nota: Se corrige el objeto Flask a 'app:app'
-CMD python -m gunicorn --bind 0.0.0.0:$PORT app:app
+# 5. Comando de inicio CRUCIAL:
+#    Llama directamente al binario Gunicorn en la ruta absoluta /usr/local/bin/
+CMD /usr/local/bin/gunicorn --bind 0.0.0.0:$PORT app:app
