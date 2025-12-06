@@ -16,15 +16,17 @@ RUN apt-get update \
 
 # 2. Copia los requisitos e instálalos en la ruta principal del sistema Python
 #    Esta secuencia asegura que los ejecutables estén en /usr/local/bin
-COPY requirements.txt /tmp/requirements.txt
+COPY requirements.txt /tmp/requirements.txt [cite: 2]
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
 # 3. Establece el directorio de trabajo para tu aplicación
 WORKDIR /usr/src/app
 
 # 4. Copia el resto del código (tu app.py) al directorio de trabajo
-COPY . .
+COPY . . 
 
 # 5. Comando de inicio CRUCIAL:
-#    Llama directamente al binario Gunicorn en la ruta absoluta /usr/local/bin/
-CMD /usr/local/bin/gunicorn --bind 0.0.0.0:$PORT app:app
+#    CORRECCIÓN: Se usa 'server_api:app' porque el archivo es 'server_api.py' y 
+#    la variable Flask es 'app'. Además, se omite la ruta absoluta de gunicorn 
+#    para confiar en el $PATH del sistema, que es más robusto.
+CMD gunicorn --bind 0.0.0.0:$PORT server_api:app
